@@ -6,8 +6,6 @@
 
   function mdMessages($compile) {
 
-    let input_id = 0;
-
     return {
       restrict: 'E',
       require: '^^mdFormValidator',
@@ -22,9 +20,7 @@
           const $ = angular.element;
           const parent = $(tElement).parent();
           const input = parent.find('input')[0] || parent.find('select')[0];
-          const name = $(input).attr('name') || "validator_field_" + (++input_id);
-          $(input).attr("name", name);
-          return name;
+          return $(input).attr('name');
         })();
 
         tElement.removeAttr('md-messages');
