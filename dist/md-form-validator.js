@@ -49,7 +49,7 @@
 (function (angular) {
   'use strict';
 
-  angular.module('md.form.validator', []).directive('mdMessage', mdMessage);
+  angular.module('md.form.validator').directive('mdMessage', mdMessage);
 
   function mdMessage() {
     return {
