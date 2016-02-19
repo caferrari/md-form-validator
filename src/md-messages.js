@@ -19,7 +19,10 @@
         const field = tAttrs.field || (() => {
           const $ = angular.element;
           const parent = $(tElement).parent();
-          const input = parent.find('input')[0] || parent.find('select')[0];
+          const input = parent.find('input')[0] ||
+                        parent.find('select')[0] ||
+                        parent.find('textarea')[0];
+
           return $(input).attr('name');
         })();
 
