@@ -3,13 +3,13 @@
 (function (angular) {
   'use strict';
 
-  angular.module('md.form.validator', ['ngMessages']);
+  angular.module('mdFormValidator', ['ngMessages']);
 })(angular);
 
 (function (angular) {
   'use strict';
 
-  angular.module('md.form.validator').directive('mdFormValidator', ['$compile', mdFormValidator]);
+  angular.module('mdFormValidator').directive('mdFormValidator', ['$compile', mdFormValidator]);
 
   function mdFormValidator($compile) {
 
@@ -49,7 +49,7 @@
 (function (angular) {
   'use strict';
 
-  angular.module('md.form.validator').directive('mdMessage', mdMessage);
+  angular.module('mdFormValidator').directive('mdMessage', mdMessage);
 
   function mdMessage() {
     return {
@@ -89,7 +89,7 @@
 (function (angular) {
   'use strict';
 
-  angular.module('md.form.validator').directive('mdMessages', ['$compile', mdMessages]);
+  angular.module('mdFormValidator').directive('mdMessages', ['$compile', mdMessages]);
 
   function mdMessages($compile) {
 

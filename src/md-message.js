@@ -1,7 +1,7 @@
 (angular => {
   'use strict';
 
-  angular.module('md.form.validator')
+  angular.module('mdFormValidator')
   .directive('mdMessage', mdMessage);
 
   function mdMessage() {
