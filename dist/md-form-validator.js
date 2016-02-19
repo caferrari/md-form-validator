@@ -106,7 +106,8 @@
         var field = tAttrs.field || function () {
           var $ = angular.element;
           var parent = $(tElement).parent();
-          var input = parent.find('input')[0] || parent.find('select')[0];
+          var input = parent.find('input')[0] || parent.find('select')[0] || parent.find('textarea')[0];
+
           return $(input).attr('name');
         }();
 
