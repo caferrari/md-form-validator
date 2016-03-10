@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('mdFormValidator')
-  .directive('mdMessages', ['$compile', mdMessages]);
+    .directive('mdMessages', ['$compile', mdMessages]);
 
   function mdMessages($compile) {
 
@@ -20,8 +20,8 @@
           const $ = angular.element;
           const parent = $(tElement).parent();
           const input = parent.find('input')[0] ||
-                        parent.find('select')[0] ||
-                        parent.find('textarea')[0];
+            parent.find('select')[0] ||
+            parent.find('textarea')[0];
 
           return $(input).attr('name');
         })();
@@ -32,7 +32,10 @@
           pre: (scope) => {
 
             tAttrs.$set('ng-messages', `${scope.formName}.${field}.$error`);
-            tAttrs.$set('ng-show', `${scope.formName}.$submitted || ${scope.formName}.${field}.$touched`);
+            tAttrs.$set('ng-show', `
+              (${scope.formName}.$submitted ||
+              ${scope.formName}.${field}.$touched) &&
+              !${scope.formName}.${field}.$valid`);
             tAttrs.$set('md-auto-hide', false);
 
             tElement.find('span').replaceWith(transclude(scope));
