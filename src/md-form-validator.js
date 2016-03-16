@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('mdFormValidator')
-  .directive('mdFormValidator', ['$compile', mdFormValidator]);
+    .directive('mdFormValidator', ['$compile', mdFormValidator]);
 
   function mdFormValidator($compile) {
 
@@ -31,9 +31,9 @@
         }
 
         return {
-          pre: (scope) => {
+          pre: (scope, iElement) => {
             scope.formName = formName;
-            $compile(tElement)(scope);
+            $compile(iElement)(scope);
           }
         };
       }
