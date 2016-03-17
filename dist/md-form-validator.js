@@ -36,16 +36,15 @@
         }
 
         return {
-          pre: function pre(scope) {
+          pre: function pre(scope, iElement) {
             scope.formName = formName;
-            $compile(tElement)(scope);
+            $compile(iElement)(scope);
           }
         };
       }
     };
   }
 })(angular);
-
 (function (angular) {
   'use strict';
 
