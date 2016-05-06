@@ -61,11 +61,14 @@
       compile: function compile(tElement, tAttrs, transclude) {
 
         tElement.removeAttr('md-message');
+        var attributes = tElement[0].attributes;
 
-        var keys = Object.keys(tAttrs).reduce(function (acc, key) {
-          if (key[0] !== '$') {
-            tElement.removeAttr(key);
-            acc.push(key);
+        var keys = Object.keys(attributes).reduce(function (acc, key) {
+          var attr = attributes[key].name;
+
+          if (attr[0] !== '$') {
+            tElement.removeAttr(attr);
+            acc.push(attr);
           }
           return acc;
         }, []).join(',');
