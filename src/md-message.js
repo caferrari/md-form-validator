@@ -2,7 +2,7 @@
   'use strict';
 
   angular.module('mdFormValidator')
-  .directive('mdMessage', mdMessage);
+    .directive('mdMessage', mdMessage);
 
   function mdMessage() {
     return {
@@ -15,11 +15,14 @@
       compile: (tElement, tAttrs, transclude) => {
 
         tElement.removeAttr('md-message');
+        const attributes = tElement[0].attributes;
 
-        const keys = Object.keys(tAttrs).reduce((acc, key) => {
-          if (key[0] !== '$') {
-            tElement.removeAttr(key);
-            acc.push(key);
+        const keys = Object.keys(attributes).reduce((acc, key) => {
+          const attr = attributes[key].name;
+
+          if (attr[0] !== '$') {
+            tElement.removeAttr(attr);
+            acc.push(attr);
           }
           return acc;
         }, []).join(',');
