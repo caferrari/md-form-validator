@@ -113,7 +113,7 @@
   }
 })(angular);
 
-(function (angular) {
+(function (angular, $) {
   'use strict';
 
   angular.module('mdFormValidator').directive('mdMessages', ['$compile', 'mdFormValidator', mdMessages]);
@@ -129,18 +129,11 @@
       transclude: true,
       template: "<div><span></span></div>",
       compile: function compile(tElement, tAttrs, transclude) {
-        var $ = angular.element;
-
-        var field = tAttrs.field || function () {
-          var parent = $(tElement).parent();
-          var input = parent.find('input')[0] || parent.find('select')[0] || parent.find('textarea')[0];
-
-          return input;
-        }();
+        var field = tAttrs.field ? $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find('[name="' + tAttrs.field + '"]') : $(tElement).parent().find('input, select, textarea');
 
         return {
           pre: function pre(scope, iElement) {
-            var fieldName = $(field).attr("name");
+            var fieldName = field.attr("name");
 
             tAttrs.$set('ng-messages', scope.formName + '.' + fieldName + '.$error');
             tAttrs.$set('ng-show', '\n              (' + scope.formName + '.$submitted ||\n              ' + scope.formName + '.' + fieldName + '.$touched) &&\n              !' + scope.formName + '.' + fieldName + '.$valid');
@@ -151,21 +144,13 @@
 
             var defaultMessages = provider.getMessages();
             Object.keys(defaultMessages).forEach(function (key) {
-              var hasMessage = false;
-              angular.forEach($(iElement).find('div'), function (elem) {
-                if (elem.getAttribute('ng-message') == key) {
-                  hasMessage = true;
-                  return;
-                }
-              });
-
-              if (hasMessage) return;
+              if ($(iElement).find('[ng-message="' + key + '"]').size() > 0) return;
 
               var errorMessage = defaultMessages[key];
-              var attrs = field.attributes;
+              var attrs = field[0].attributes;
               Object.keys(attrs || {}).forEach(function (attr) {
                 attr = attrs[attr].name;
-                errorMessage = errorMessage.replace(new RegExp('{' + attr + '}', 'g'), field.getAttribute(attr));
+                errorMessage = errorMessage.replace(new RegExp('{' + attr + '}', 'g'), field.attr(attr));
               });
 
               $(iElement).append('<div ng-message="' + key + '">' + errorMessage + '</div>');
@@ -177,4 +162,4 @@
       }
     };
   }
-})(angular);
+})(angular, jQuery);

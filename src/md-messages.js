@@ -1,4 +1,4 @@
-(angular => {
+((angular, $) => {
   'use strict';
 
   angular.module('mdFormValidator')
@@ -15,21 +15,13 @@
       transclude: true,
       template: "<div><span></span></div>",
       compile: (tElement, tAttrs, transclude) => {
-        const $ = angular.element;
-
-        const field = tAttrs.field || (() => {
-          const parent = $(tElement).parent();
-          const input = parent.find('input')[0] ||
-            parent.find('select')[0] ||
-            parent.find('textarea')[0];
-
-          return input;
-        })();
-
+        const field = tAttrs.field ?
+          $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find(`[name="${tAttrs.field}"]`) :
+          $(tElement).parent().find('input, select, textarea');
 
         return {
           pre: (scope, iElement) => {
-            const fieldName = $(field).attr("name");
+            const fieldName = field.attr("name");
 
             tAttrs.$set('ng-messages', `${scope.formName}.${fieldName}.$error`);
             tAttrs.$set('ng-show', `
@@ -43,21 +35,13 @@
 
             const defaultMessages = provider.getMessages();
             Object.keys(defaultMessages).forEach(key => {
-              let hasMessage = false;
-              angular.forEach($(iElement).find(`div`), elem => {
-                if (elem.getAttribute('ng-message') == key) {
-                  hasMessage = true;
-                  return;
-                }
-              });
-
-              if (hasMessage) return;
+              if ($(iElement).find(`[ng-message="${key}"]`).size() > 0) return;
 
               let errorMessage = defaultMessages[key];
-              const attrs = field.attributes;
+              const attrs = field[0].attributes;
               Object.keys(attrs || {}).forEach(attr => {
                 attr = attrs[attr].name;
-                errorMessage = errorMessage.replace(new RegExp(`{${attr}}`, 'g'), field.getAttribute(attr));
+                errorMessage = errorMessage.replace(new RegExp(`{${attr}}`, 'g'), field.attr(attr));
               });
 
               $(iElement).append(`<div ng-message="${key}">${errorMessage}</div>`);
@@ -71,4 +55,4 @@
     };
   }
 
-})(angular);
+})(angular, jQuery);
