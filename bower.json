@@ -2,7 +2,7 @@
   "name": "md-form-validator",
   "version": "0.1.3",
   "description": "Angular Material Design Form Validator",
-  "main": "dist/md-form-validator.min.js",
+  "main": "dist/md-form-validator.js",
   "authors": [
     "Carlos André Ferrari"
   ],
