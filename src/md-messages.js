@@ -23,17 +23,19 @@
             parent.find('select')[0] ||
             parent.find('textarea')[0];
 
-          return $(input).attr('name');
+          return input;
         })();
+
 
         return {
           pre: (scope, iElement) => {
+            const fieldName = $(field).attr("name");
 
-            tAttrs.$set('ng-messages', `${scope.formName}.${field}.$error`);
+            tAttrs.$set('ng-messages', `${scope.formName}.${fieldName}.$error`);
             tAttrs.$set('ng-show', `
               (${scope.formName}.$submitted ||
-              ${scope.formName}.${field}.$touched) &&
-              !${scope.formName}.${field}.$valid`);
+              ${scope.formName}.${fieldName}.$touched) &&
+              !${scope.formName}.${fieldName}.$valid`);
             tAttrs.$set('md-auto-hide', false);
 
             iElement.find('span').replaceWith(transclude(scope));
@@ -50,7 +52,15 @@
               });
 
               if (hasMessage) return;
-              $(iElement).append(`<div ng-message="${key}">${defaultMessages[key]}</div>`);
+
+              let errorMessage = defaultMessages[key];
+              const attrs = field.attributes;
+              Object.keys(attrs).forEach(attr => {
+                attr = attrs[attr].name;
+                errorMessage = errorMessage.replace(new RegExp(`{${attr}}`, 'g'), field.getAttribute(attr));
+              });
+
+              $(iElement).append(`<div ng-message="${key}">${errorMessage}</div>`);
             });
 
             $compile(iElement)(scope);

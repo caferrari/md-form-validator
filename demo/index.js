@@ -6,9 +6,8 @@ angular.module('sbrubles', [
     'validatorAsync'
   ])
   .config(['mdFormValidatorProvider', function(mdFormValidatorProvider) {
-    console.log(mdFormValidatorProvider);
-    
     mdFormValidatorProvider.setMessage("required", "Obrigatório");
+    mdFormValidatorProvider.setMessage("md-maxlength", "Limite {md-maxlength}");
   }])
   .controller('homeCtrl', function($q, $timeout, $scope) {
 

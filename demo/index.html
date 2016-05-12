@@ -28,7 +28,7 @@
 
           <md-input-container>
             <label>Email</label>
-            <input name="email" type="email" ng-model="user.email" required="required" validator-async="validateEmail($value)" />
+            <input name="email" type="email" ng-model="user.email" required="required" md-maxlength="3" validator-async="validateEmail($value)" />
             <md-messages>
               <md-message email="email">E-mail inválido</md-message>
               <md-message async="async">E-mail já cadastrado</md-message>
