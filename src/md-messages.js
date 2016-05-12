@@ -2,9 +2,9 @@
   'use strict';
 
   angular.module('mdFormValidator')
-    .directive('mdMessages', ['$compile', mdMessages]);
+    .directive('mdMessages', ['$compile', 'mdFormValidator', mdMessages]);
 
-  function mdMessages($compile) {
+  function mdMessages($compile, provider) {
 
     return {
       restrict: 'E',
@@ -15,9 +15,9 @@
       transclude: true,
       template: "<div><span></span></div>",
       compile: (tElement, tAttrs, transclude) => {
+        const $ = angular.element;
 
         const field = tAttrs.field || (() => {
-          const $ = angular.element;
           const parent = $(tElement).parent();
           const input = parent.find('input')[0] ||
             parent.find('select')[0] ||
@@ -26,10 +26,8 @@
           return $(input).attr('name');
         })();
 
-        tElement.removeAttr('md-messages');
-
         return {
-          pre: (scope) => {
+          pre: (scope, iElement) => {
 
             tAttrs.$set('ng-messages', `${scope.formName}.${field}.$error`);
             tAttrs.$set('ng-show', `
@@ -38,9 +36,24 @@
               !${scope.formName}.${field}.$valid`);
             tAttrs.$set('md-auto-hide', false);
 
-            tElement.find('span').replaceWith(transclude(scope));
+            iElement.find('span').replaceWith(transclude(scope));
+            iElement.removeAttr('md-messages');
 
-            $compile(tElement)(scope);
+            const defaultMessages = provider.getMessages();
+            Object.keys(defaultMessages).forEach(key => {
+              let hasMessage = false;
+              angular.forEach($(iElement).find(`div`), elem => {
+                if (elem.getAttribute('ng-message') == key) {
+                  hasMessage = true;
+                  return;
+                }
+              });
+
+              if (hasMessage) return;
+              $(iElement).append(`<div ng-message="${key}">${defaultMessages[key]}</div>`);
+            });
+
+            $compile(iElement)(scope);
           }
         };
 
