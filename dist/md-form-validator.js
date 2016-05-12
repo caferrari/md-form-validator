@@ -113,7 +113,7 @@
   }
 })(angular);
 
-(function (angular, $) {
+(function (angular) {
   'use strict';
 
   angular.module('mdFormValidator').directive('mdMessages', ['$compile', 'mdFormValidator', mdMessages]);
@@ -129,7 +129,36 @@
       transclude: true,
       template: "<div><span></span></div>",
       compile: function compile(tElement, tAttrs, transclude) {
-        var field = tAttrs.field ? $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find('[name="' + tAttrs.field + '"]') : $(tElement).parent().find('input, select, textarea');
+        var $ = angular.element;
+        tElement = $(tElement);
+
+        // const field = tAttrs.field ?
+        //   $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find(`[name="${tAttrs.field}"]`) :
+        //   $(tElement).parent().find('input, select, textarea');
+
+        var field = function () {
+          if (tAttrs.field) {
+            var _parent = tElement[0];
+
+            while (_parent.parentNode) {
+              _parent = _parent.parentNode;
+
+              if (_parent.tagName.toLowerCase() == "ng-form" || _parent.hasAttribute('ng-form') || _parent.tagName.toLowerCase() == "form") {
+                break;
+              }
+            }
+
+            var _input = _parent.querySelector('[name="' + tAttrs.field + '"]');
+            if (!_input) throw new Error("input not found: " + tAttrs.field);
+
+            return $(_input);
+          }
+
+          var parent = tElement.parent();
+          var input = parent.find('input')[0] || parent.find('select')[0] || parent.find('textarea')[0];
+
+          return $(input);
+        }();
 
         return {
           pre: function pre(scope, iElement) {
@@ -144,7 +173,7 @@
 
             var defaultMessages = provider.getMessages();
             Object.keys(defaultMessages).forEach(function (key) {
-              if ($(iElement).find('[ng-message="' + key + '"]').size() > 0) return;
+              if (iElement[0].querySelector('[ng-message="' + key + '"]')) return;
 
               var errorMessage = defaultMessages[key];
               var attrs = field[0].attributes;
@@ -153,7 +182,7 @@
                 errorMessage = errorMessage.replace(new RegExp('{' + attr + '}', 'g'), field.attr(attr));
               });
 
-              $(iElement).append('<div ng-message="' + key + '">' + errorMessage + '</div>');
+              iElement.append('<div ng-message="' + key + '">' + errorMessage + '</div>');
             });
 
             $compile(iElement)(scope);
@@ -162,4 +191,4 @@
       }
     };
   }
-})(angular, jQuery);
+})(angular);

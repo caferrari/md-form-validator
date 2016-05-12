@@ -1,4 +1,4 @@
-((angular, $) => {
+(angular => {
   'use strict';
 
   angular.module('mdFormValidator')
@@ -15,9 +15,40 @@
       transclude: true,
       template: "<div><span></span></div>",
       compile: (tElement, tAttrs, transclude) => {
-        const field = tAttrs.field ?
-          $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find(`[name="${tAttrs.field}"]`) :
-          $(tElement).parent().find('input, select, textarea');
+        const $ = angular.element;
+        tElement = $(tElement);
+
+        // const field = tAttrs.field ?
+        //   $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find(`[name="${tAttrs.field}"]`) :
+        //   $(tElement).parent().find('input, select, textarea');
+
+        const field = (() => {
+          if (tAttrs.field) {
+            let parent = tElement[0];
+
+            while (parent.parentNode) {
+              parent = parent.parentNode;
+
+              if (parent.tagName.toLowerCase() == "ng-form" ||
+                parent.hasAttribute('ng-form') ||
+                parent.tagName.toLowerCase() == "form") {
+                break;
+              }
+            }
+            
+            const input = parent.querySelector(`[name="${tAttrs.field}"]`);
+            if(!input) throw new Error("input not found: " + tAttrs.field);
+            
+            return $(input);
+          }
+
+          const parent = tElement.parent();
+          const input = parent.find('input')[0] ||
+            parent.find('select')[0] ||
+            parent.find('textarea')[0];
+
+          return $(input);
+        })();
 
         return {
           pre: (scope, iElement) => {
@@ -35,7 +66,7 @@
 
             const defaultMessages = provider.getMessages();
             Object.keys(defaultMessages).forEach(key => {
-              if ($(iElement).find(`[ng-message="${key}"]`).size() > 0) return;
+              if (iElement[0].querySelector(`[ng-message="${key}"]`)) return;
 
               let errorMessage = defaultMessages[key];
               const attrs = field[0].attributes;
@@ -44,7 +75,7 @@
                 errorMessage = errorMessage.replace(new RegExp(`{${attr}}`, 'g'), field.attr(attr));
               });
 
-              $(iElement).append(`<div ng-message="${key}">${errorMessage}</div>`);
+              iElement.append(`<div ng-message="${key}">${errorMessage}</div>`);
             });
 
             $compile(iElement)(scope);
@@ -55,4 +86,4 @@
     };
   }
 
-})(angular, jQuery);
+})(angular);
