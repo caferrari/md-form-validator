@@ -9,3 +9,13 @@ How to install
 --------------
 
 `bower install --save md-form-validator`
+
+Config Default Messages
+-----------------------
+
+```javascript
+angular.module("myApp").config(function(mdFormValidatorProvider) {
+    mdFormValidatorProvider.setMessage("required", "This field is required");
+    mdFormValidatorProvider.setMessage("maxlength", "Please enter no more than {maxlength} characters");
+}]);
+```
