@@ -55,7 +55,7 @@
 
               let errorMessage = defaultMessages[key];
               const attrs = field.attributes;
-              Object.keys(attrs).forEach(attr => {
+              Object.keys(attrs || {}).forEach(attr => {
                 attr = attrs[attr].name;
                 errorMessage = errorMessage.replace(new RegExp(`{${attr}}`, 'g'), field.getAttribute(attr));
               });

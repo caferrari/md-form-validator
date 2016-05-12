@@ -163,7 +163,7 @@
 
               var errorMessage = defaultMessages[key];
               var attrs = field.attributes;
-              Object.keys(attrs).forEach(function (attr) {
+              Object.keys(attrs || {}).forEach(function (attr) {
                 attr = attrs[attr].name;
                 errorMessage = errorMessage.replace(new RegExp('{' + attr + '}', 'g'), field.getAttribute(attr));
               });
