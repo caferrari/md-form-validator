@@ -47,7 +47,9 @@
                 }
               }
 
-              scope.rootFormName = form.getAttribute('name');
+              if(form) {
+                scope.rootFormName = form.getAttribute('name');
+              }
             }
 
             $compile(iElement)(scope);
