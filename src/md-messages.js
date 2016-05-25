@@ -51,15 +51,15 @@
         })();
 
         return {
-          pre: (scope, iElement) => {
+          pre: (scope, iElement, iAttrs) => {
             const fieldName = field.attr("name");
 
-            tAttrs.$set('ng-messages', `${scope.formName}.${fieldName}.$error`);
-            tAttrs.$set('ng-show', `
-              (${scope.formName}.$submitted ||
+            iAttrs.$set('ng-messages', `${scope.formName}.${fieldName}.$error`);
+            iAttrs.$set('ng-show', `
+              (${scope.rootFormName}.$submitted ||
               ${scope.formName}.${fieldName}.$touched) &&
               !${scope.formName}.${fieldName}.$valid`);
-            tAttrs.$set('md-auto-hide', false);
+            iAttrs.$set('md-auto-hide', false);
 
             iElement.find('span').replaceWith(transclude(scope));
             iElement.removeAttr('md-messages');

@@ -32,7 +32,26 @@
 
         return {
           pre: (scope, iElement) => {
-            scope.formName = formName;
+            scope.rootFormName = scope.formName = formName;
+
+            if(iElement[0].tagName.toLowerCase() != "form") {
+              let parent = iElement[0];
+              let form = null;
+
+              while (parent.parentNode) {
+                parent = parent.parentNode;
+
+                if (parent.tagName.toLowerCase() == "form") {
+                  form = parent;
+                  break;
+                }
+              }
+
+              if(form) {
+                scope.rootFormName = form.getAttribute('name');
+              }
+            }
+
             $compile(iElement)(scope);
           }
         };
