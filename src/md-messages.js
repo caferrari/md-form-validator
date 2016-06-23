@@ -35,10 +35,9 @@
                 break;
               }
             }
-            
+
             const input = parent.querySelector(`[name="${tAttrs.field}"]`);
-            if(!input) throw new Error("input not found: " + tAttrs.field);
-            
+
             return $(input);
           }
 
@@ -49,6 +48,10 @@
 
           return $(input);
         })();
+
+        if (!field) {
+          throw new Error("field not found: " + tAttrs.field);
+        }
 
         return {
           pre: (scope, iElement, iAttrs) => {
