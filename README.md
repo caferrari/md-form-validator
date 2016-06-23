@@ -13,9 +13,43 @@ How to install
 Config Default Messages
 -----------------------
 
+
 ```javascript
 angular.module("myApp").config(function(mdFormValidatorProvider) {
     mdFormValidatorProvider.setMessage("required", "This field is required");
     mdFormValidatorProvider.setMessage("maxlength", "Please enter no more than {maxlength} characters");
 }]);
+```
+
+**With default messages you don´t need to add a md-message() for each validation:**
+
+Before:
+```html
+<md-input-container>
+  <label>Código</label>
+  <input ng-model="code" name="code" required/>
+  <md-messages>
+    <md-message required>Required</md-message>
+  </md-messages>
+</md-input-container>
+```
+After default messages:
+```html
+<md-input-container>
+  <label>Código</label>
+  <input ng-model="code" name="code" required/>
+  <md-messages />
+</md-input-container>
+```
+To override the message:
+```html
+<md-input-container>
+  <label>Código</label>
+  <input ng-model="code" name="code" required/>
+  <md-messages>
+    <md-message required>
+      This is my cool required message for this field
+    </md-message>
+  </md-messages>
+</md-input-container>
 ```
