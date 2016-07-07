@@ -29,6 +29,7 @@
             while (parent.parentNode) {
               parent = parent.parentNode;
 
+              if (!parent.tagName) continue;
               if (parent.tagName.toLowerCase() == "ng-form" ||
                 parent.hasAttribute('ng-form') ||
                 parent.tagName.toLowerCase() == "form") {

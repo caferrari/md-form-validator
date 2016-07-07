@@ -70,6 +70,7 @@
               while (parent.parentNode) {
                 parent = parent.parentNode;
 
+                if (!parent.tagName) continue;
                 if (parent.tagName.toLowerCase() == "form") {
                   form = parent;
                   break;
@@ -162,13 +163,13 @@
             while (_parent.parentNode) {
               _parent = _parent.parentNode;
 
+              if (!_parent.tagName) continue;
               if (_parent.tagName.toLowerCase() == "ng-form" || _parent.hasAttribute('ng-form') || _parent.tagName.toLowerCase() == "form") {
                 break;
               }
             }
 
             var _input = _parent.querySelector('[name="' + tAttrs.field + '"]');
-            if (!_input) throw new Error("input not found: " + tAttrs.field);
 
             return $(_input);
           }
@@ -178,6 +179,10 @@
 
           return $(input);
         }();
+
+        if (!field) {
+          throw new Error("field not found: " + tAttrs.field);
+        }
 
         return {
           pre: function pre(scope, iElement, iAttrs) {

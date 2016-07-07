@@ -41,6 +41,7 @@
               while (parent.parentNode) {
                 parent = parent.parentNode;
 
+                if (!parent.tagName) continue;
                 if (parent.tagName.toLowerCase() == "form") {
                   form = parent;
                   break;
