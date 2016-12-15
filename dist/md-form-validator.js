@@ -56,12 +56,24 @@
         tAttrs.$set('novalidate', true);
 
         if (tAttrs.ngSubmit) {
-          tAttrs.$set('ng-submit', formName + ".$valid && " + tAttrs.ngSubmit);
+          tAttrs.$set('ng-submit', "broadcastValidation() && " + formName + ".$valid && " + tAttrs.ngSubmit);
         }
 
         return {
           pre: function pre(scope, iElement) {
             scope.rootFormName = scope.formName = formName;
+
+            scope.$on('$validate', function () {
+              var form = scope[scope.formName];
+              if (form) {
+                form.$setSubmitted();
+              }
+            });
+
+            scope.broadcastValidation = function () {
+              scope.$broadcast('$validate');
+              return true;
+            };
 
             if (iElement[0].tagName.toLowerCase() != "form") {
               var parent = iElement[0];
