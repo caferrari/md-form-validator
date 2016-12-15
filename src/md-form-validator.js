@@ -32,7 +32,7 @@
 
         return {
           pre: (scope, iElement) => {
-            scope.rootFormName = scope.formName = formName;
+            scope.formName = formName;
 
             scope.$on('$validate', () => {
               const form = scope[scope.formName];
@@ -45,25 +45,6 @@
               scope.$broadcast('$validate');
               return true;
             };
-
-            if(iElement[0].tagName.toLowerCase() != "form") {
-              let parent = iElement[0];
-              let form = null;
-
-              while (parent.parentNode) {
-                parent = parent.parentNode;
-
-                if (!parent.tagName) continue;
-                if (parent.tagName.toLowerCase() == "form") {
-                  form = parent;
-                  break;
-                }
-              }
-
-              if(form) {
-                scope.rootFormName = form.getAttribute('name');
-              }
-            }
 
             $compile(iElement)(scope);
           }

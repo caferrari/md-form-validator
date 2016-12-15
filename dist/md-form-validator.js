@@ -61,7 +61,7 @@
 
         return {
           pre: function pre(scope, iElement) {
-            scope.rootFormName = scope.formName = formName;
+            scope.formName = formName;
 
             scope.$on('$validate', function () {
               var form = scope[scope.formName];
@@ -74,25 +74,6 @@
               scope.$broadcast('$validate');
               return true;
             };
-
-            if (iElement[0].tagName.toLowerCase() != "form") {
-              var parent = iElement[0];
-              var form = null;
-
-              while (parent.parentNode) {
-                parent = parent.parentNode;
-
-                if (!parent.tagName) continue;
-                if (parent.tagName.toLowerCase() == "form") {
-                  form = parent;
-                  break;
-                }
-              }
-
-              if (form) {
-                scope.rootFormName = form.getAttribute('name');
-              }
-            }
 
             $compile(iElement)(scope);
           }
@@ -201,7 +182,7 @@
             var fieldName = field.attr("name");
 
             iAttrs.$set('ng-messages', scope.formName + '.' + fieldName + '.$error');
-            iAttrs.$set('ng-show', '\n              (' + scope.rootFormName + '.$submitted ||\n              ' + scope.formName + '.' + fieldName + '.$touched) &&\n              !' + scope.formName + '.' + fieldName + '.$valid');
+            iAttrs.$set('ng-show', '\n              (' + scope.formName + '.$submitted ||\n              ' + scope.formName + '.' + fieldName + '.$touched) &&\n              !' + scope.formName + '.' + fieldName + '.$valid');
             iAttrs.$set('md-auto-hide', false);
 
             iElement.find('span').replaceWith(transclude(scope));

@@ -60,7 +60,7 @@
 
             iAttrs.$set('ng-messages', `${scope.formName}.${fieldName}.$error`);
             iAttrs.$set('ng-show', `
-              (${scope.rootFormName}.$submitted ||
+              (${scope.formName}.$submitted ||
               ${scope.formName}.${fieldName}.$touched) &&
               !${scope.formName}.${fieldName}.$valid`);
             iAttrs.$set('md-auto-hide', false);
