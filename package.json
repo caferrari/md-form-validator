@@ -1,6 +1,6 @@
 {
   "name": "md-form-validator",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "description": "Angular Material Design Form Validator",
   "scripts": {
     "dev": "gulp watch",
