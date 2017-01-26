@@ -195,6 +195,7 @@
               var errorMessage = defaultMessages[key];
               var attrs = field[0].attributes;
               Object.keys(attrs || {}).forEach(function (attr) {
+                if (!attrs[attr]) return;
                 attr = attrs[attr].name;
                 errorMessage = errorMessage.replace(new RegExp('{' + attr + '}', 'g'), field.attr(attr));
               });
