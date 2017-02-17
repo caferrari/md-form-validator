@@ -181,8 +181,8 @@
           pre: function pre(scope, iElement, iAttrs) {
             var fieldName = field.attr("name");
 
-            iAttrs.$set('ng-messages', scope.formName + '.' + fieldName + '.$error');
-            iAttrs.$set('ng-show', '\n              (' + scope.formName + '.$submitted ||\n              ' + scope.formName + '.' + fieldName + '.$touched) &&\n              !' + scope.formName + '.' + fieldName + '.$valid');
+            iAttrs.$set('ng-messages', scope.formName + '[\'' + fieldName + '\'].$error');
+            iAttrs.$set('ng-show', '\n              (' + scope.formName + '.$submitted ||\n              ' + scope.formName + '[\'' + fieldName + '\'].$touched) &&\n              !' + scope.formName + '[\'' + fieldName + '\'].$valid');
             iAttrs.$set('md-auto-hide', false);
 
             iElement.find('span').replaceWith(transclude(scope));

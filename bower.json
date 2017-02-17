@@ -1,10 +1,11 @@
 {
   "name": "md-form-validator",
-  "version": "0.1.7",
+  "version": "0.1.13",
   "description": "Angular Material Design Form Validator",
   "main": "dist/md-form-validator.js",
   "authors": [
-    "Carlos André Ferrari"
+    "Carlos André Ferrari",
+    "Daniel de Oliveira Prado"
   ],
   "repository": {
     "type": "git",
