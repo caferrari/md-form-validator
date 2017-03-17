@@ -8,7 +8,9 @@ const gulp = require('gulp'),
 
 const files = ['src/**/*.js'];
 
-gulp.task('clean', () => gulp.src(['dist/'], { read: false }).pipe(rimraf()));
+gulp.task('clean', () => gulp.src(['dist/'], {
+  read: false
+}).pipe(rimraf()));
 
 gulp.task('lint', () => gulp.src(files).pipe(jshint()).pipe(jshint.reporter('default')));
 

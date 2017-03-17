@@ -47,33 +47,38 @@
       terminal: true,
       controller: function controller() {},
       compile: function compile(tElement, tAttrs, transclude) {
-
         var formName = tAttrs.name || "form_" + ++form_id;
-
         tElement.removeAttr('md-form-validator');
 
         tAttrs.$set('name', formName);
         tAttrs.$set('novalidate', true);
 
         if (tAttrs.ngSubmit) {
-          tAttrs.$set('ng-submit', "broadcastValidation() && " + formName + ".$valid && " + tAttrs.ngSubmit);
+          tAttrs.$set('ng-submit', formName + ".$valid && " + tAttrs.ngSubmit);
         }
 
         return {
           pre: function pre(scope, iElement) {
-            scope.formName = formName;
+            scope.rootFormName = scope.formName = formName;
 
-            scope.$on('$validate', function () {
-              var form = scope[scope.formName];
-              if (form) {
-                form.$setSubmitted();
+            if (iElement[0].tagName.toLowerCase() != "form") {
+              var parent = iElement[0];
+              var form = null;
+
+              while (parent.parentNode) {
+                parent = parent.parentNode;
+
+                if (!parent.tagName) continue;
+                if (parent.tagName.toLowerCase() == "form") {
+                  form = parent;
+                  break;
+                }
               }
-            });
 
-            scope.broadcastValidation = function () {
-              scope.$broadcast('$validate');
-              return true;
-            };
+              if (form) {
+                scope.rootFormName = form.getAttribute('name');
+              }
+            }
 
             $compile(iElement)(scope);
           }
@@ -82,7 +87,6 @@
     };
   }
 })(angular);
-
 (function (angular) {
   'use strict';
 
@@ -145,10 +149,6 @@
         var $ = angular.element;
         tElement = $(tElement);
 
-        // const field = tAttrs.field ?
-        //   $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find(`[name="${tAttrs.field}"]`) :
-        //   $(tElement).parent().find('input, select, textarea');
-
         var field = function () {
           if (tAttrs.field) {
             var _parent = tElement[0];
@@ -163,7 +163,6 @@
             }
 
             var _input = _parent.querySelector('[name="' + tAttrs.field + '"]');
-
             return $(_input);
           }
 
@@ -181,8 +180,13 @@
           pre: function pre(scope, iElement, iAttrs) {
             var fieldName = field.attr("name");
 
+            if (!fieldName) {
+              console.log(field);
+              throw new Error("set name attr to the above field");
+            }
+
             iAttrs.$set('ng-messages', scope.formName + '[\'' + fieldName + '\'].$error');
-            iAttrs.$set('ng-show', '\n              (' + scope.formName + '.$submitted ||\n              ' + scope.formName + '[\'' + fieldName + '\'].$touched) &&\n              !' + scope.formName + '[\'' + fieldName + '\'].$valid');
+            iAttrs.$set('ng-show', '\n              (' + scope.rootFormName + '.$submitted ||\n              ' + scope.formName + '[\'' + fieldName + '\'].$touched) &&\n              !' + scope.formName + '[\'' + fieldName + '\'].$valid');
             iAttrs.$set('md-auto-hide', false);
 
             iElement.find('span').replaceWith(transclude(scope));

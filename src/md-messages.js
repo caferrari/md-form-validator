@@ -18,10 +18,6 @@
         const $ = angular.element;
         tElement = $(tElement);
 
-        // const field = tAttrs.field ?
-        //   $(tElement).parents('ng-form, [ng-form], .ng-form, form').eq(0).find(`[name="${tAttrs.field}"]`) :
-        //   $(tElement).parent().find('input, select, textarea');
-
         const field = (() => {
           if (tAttrs.field) {
             let parent = tElement[0];
@@ -38,7 +34,6 @@
             }
 
             const input = parent.querySelector(`[name="${tAttrs.field}"]`);
-
             return $(input);
           }
 
@@ -58,9 +53,14 @@
           pre: (scope, iElement, iAttrs) => {
             const fieldName = field.attr("name");
 
+            if (!fieldName) {
+              console.log(field);
+              throw new Error("set name attr to the above field");
+            }
+
             iAttrs.$set('ng-messages', `${scope.formName}['${fieldName}'].$error`);
             iAttrs.$set('ng-show', `
-              (${scope.formName}.$submitted ||
+              (${scope.rootFormName}.$submitted ||
               ${scope.formName}['${fieldName}'].$touched) &&
               !${scope.formName}['${fieldName}'].$valid`);
             iAttrs.$set('md-auto-hide', false);

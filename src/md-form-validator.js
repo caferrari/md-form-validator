@@ -18,33 +18,38 @@
 
       },
       compile: (tElement, tAttrs, transclude) => {
-
         const formName = tAttrs.name || "form_" + (++form_id);
-
         tElement.removeAttr('md-form-validator');
 
         tAttrs.$set('name', formName);
         tAttrs.$set('novalidate', true);
 
         if (tAttrs.ngSubmit) {
-          tAttrs.$set('ng-submit', "broadcastValidation() && " + formName + ".$valid && " + tAttrs.ngSubmit);
+          tAttrs.$set('ng-submit', formName + ".$valid && " + tAttrs.ngSubmit);
         }
 
         return {
           pre: (scope, iElement) => {
-            scope.formName = formName;
+            scope.rootFormName = scope.formName = formName;
 
-            scope.$on('$validate', () => {
-              const form = scope[scope.formName];
-              if (form) {
-                form.$setSubmitted();
+            if (iElement[0].tagName.toLowerCase() != "form") {
+              let parent = iElement[0];
+              let form = null;
+
+              while (parent.parentNode) {
+                parent = parent.parentNode;
+
+                if (!parent.tagName) continue;
+                if (parent.tagName.toLowerCase() == "form") {
+                  form = parent;
+                  break;
+                }
               }
-            });
 
-            scope.broadcastValidation = () => {
-              scope.$broadcast('$validate');
-              return true;
-            };
+              if (form) {
+                scope.rootFormName = form.getAttribute('name');
+              }
+            }
 
             $compile(iElement)(scope);
           }
