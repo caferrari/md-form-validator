@@ -26,7 +26,7 @@ angular.module("myApp").config(function(mdFormValidatorProvider) {
 Before:
 ```html
 <md-input-container>
-  <label>Código</label>
+  <label>Code</label>
   <input ng-model="code" name="code" required/>
   <md-messages>
     <md-message required>Required</md-message>
@@ -36,7 +36,7 @@ Before:
 After default messages:
 ```html
 <md-input-container>
-  <label>Código</label>
+  <label>Code</label>
   <input ng-model="code" name="code" required/>
   <md-messages />
 </md-input-container>
@@ -44,7 +44,7 @@ After default messages:
 To override the message:
 ```html
 <md-input-container>
-  <label>Código</label>
+  <label>Code</label>
   <input ng-model="code" name="code" required/>
   <md-messages>
     <md-message required>
